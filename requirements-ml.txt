@@ -1,0 +1,44 @@
+# ---------------------------------------------------------------------------------
+# VestiAI — deep-learning extra (diffusion try-on + training)
+#
+#   python scripts/setup.py --profile ml      # detects your GPU, installs torch correctly,
+#                                             # then installs this file
+#   pip install -r requirements-ml.txt        # (install torch first — see below)
+#
+# PyTorch is NOT pinned here on purpose: the right wheel depends on your CUDA driver, OS
+# and accelerator. Install it first:
+#
+#   CUDA 12.4 (Linux/Windows) : pip install torch torchvision \
+#                                 --index-url https://download.pytorch.org/whl/cu124
+#   CUDA 12.1                 : --index-url https://download.pytorch.org/whl/cu121
+#   CPU only                  : pip install torch torchvision \
+#                                 --index-url https://download.pytorch.org/whl/cpu
+#   Apple Silicon (MPS)       : pip install torch torchvision    # default macOS wheel
+#
+# The versions below are the set that resolves together and that this repo's code targets
+# (Oct 2026: torch 2.14.x / diffusers 0.41 / transformers 5.19). VestiAI only uses APIs
+# that have been stable since diffusers 0.32 and transformers 4.40, so if your cluster
+# image ships an older stack, relax these pins to `>=` and it will still work.
+# ---------------------------------------------------------------------------------
+
+diffusers==0.41.0
+transformers==5.19.0
+accelerate==1.15.0
+peft==0.21.2
+safetensors==0.8.0
+huggingface-hub==1.33.0
+
+# --- losses / metrics ---------------------------------------------------------
+lpips==0.1.4
+torchmetrics==1.9.0
+
+# --- tracking (TensorBoard; W&B optional, set tracker: wandb) ------------------
+tensorboard==2.21.0
+
+# --- garment background removal (optional but recommended — much better edges than
+#     GrabCut on studio product shots). Pulls onnxruntime.
+# rembg==2.0.85
+# onnxruntime==1.30.0
+
+# --- 8-bit optimizers for small GPUs (FULL_TRAINING sets optimizer: adamw8bit) --
+# bitsandbytes==0.50.2

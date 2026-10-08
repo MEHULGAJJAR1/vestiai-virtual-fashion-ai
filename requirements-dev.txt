@@ -1,0 +1,23 @@
+# ======================================================================================
+# VestiAI — development & test requirements
+#
+#   pip install -r requirements.txt -r requirements.txt ... (see below)
+#   python scripts/setup.py --profile dev
+#
+# Installed *on top of* requirements.txt. Nothing here is needed to run the app.
+# ======================================================================================
+
+# --- testing -----------------------------------------------------------------------
+pytest==8.4.2
+pytest-cov==7.0.0
+pytest-timeout==2.4.0
+httpx==0.28.1              # required by fastapi.testclient
+
+# --- linting / formatting ----------------------------------------------------------
+ruff==0.14.3
+
+# --- the frontend smoke test -------------------------------------------------------
+# scripts/check_frontend.mjs runs the browser modules inside jsdom via Node. JS has no
+# requirements.txt, so install it separately (it is intentionally NOT a saved dependency):
+#     npm install --no-save jsdom
+#     node scripts/check_frontend.mjs

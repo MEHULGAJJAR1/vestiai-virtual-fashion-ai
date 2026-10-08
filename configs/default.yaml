@@ -1,0 +1,90 @@
+# ======================================================================================
+# VestiAI — runtime configuration
+#
+# Resolution order (later wins):
+#   1. dataclass defaults in backend/config.py
+#   2. this file  (loaded automatically, or pass --config path/to/file.yaml)
+#   3. VESTIAI_* environment variables (see .env.example)
+#   4. explicit keyword arguments / CLI flags
+#
+# Keys mirror the `Settings` dataclass field names exactly. Delete any key you do not
+# want to override — nothing here is required.
+# ======================================================================================
+
+app_name: VestiAI
+app_version: "1.0.0"
+debug: false
+host: 0.0.0.0
+port: 8000
+log_level: INFO
+cors_origins: "*"
+
+# ------------------------------------------------------------------ storage
+# Leave paths out to keep the defaults inside the project folder.
+# uploads_dir: uploads
+# garments_dir: garments
+# datasets_dir: datasets
+# checkpoints_dir: checkpoints
+# results_dir: results
+# captures_dir: captures
+# models_cache_dir: models_cache
+
+# ------------------------------------------------------------------ device
+device: auto            # auto | cuda | mps | cpu
+force_cpu: false
+allow_tf32: true
+cuda_memory_fraction: 0.9
+min_gpu_memory_gb: 6.0  # below this we warn loudly before starting a diffusion job
+torch_num_threads: 0    # 0 = let PyTorch decide
+
+# ------------------------------------------------------------------ garment preprocessing
+garment_max_side: 1024
+garment_min_side: 256
+garment_min_resolution: 160      # uploads smaller than this are rejected
+background_removal: auto         # auto | rembg | grabcut | none
+target_garment_canvas: 768       # square canvas the cut-out is normalised into
+
+# ------------------------------------------------------------------ pose / realtime
+pose_model_complexity: 1         # 0 lite · 1 full · 2 heavy (server-side estimator)
+pose_min_detection_confidence: 0.5
+pose_min_tracking_confidence: 0.5
+segmentation_enabled: true
+smoothing_alpha: 0.35            # EMA factor for landmark smoothing (0 = off)
+tracking_lost_grace_frames: 8    # frames the garment survives after the person disappears
+
+# ------------------------------------------------------------------ try-on (both pipelines)
+tryon_backend: auto              # auto | diffusion | lightweight | disabled
+vton_pretrained: yisol/IDM-VTON  # reference architecture the trainer is modelled on
+vton_base_pipeline: stabilityai/stable-diffusion-2-inpainting
+resolution: 512                  # 256 | 512 | 768 | 1024
+num_inference_steps: 30
+guidance_scale: 2.0
+seed: 42
+live_ai_interval_ms: 700         # how often AI mode asks the server for a real frame
+live_ai_max_side: 512            # frames are downscaled before they are uploaded
+enable_cpu_diffusion: false      # allow diffusion on CPU (≈1 min/image — off by default)
+
+# ------------------------------------------------------------------ training defaults
+# The AI Training page and scripts/train.py start from these; presets per mode live in
+# backend/training/trainer.py (MODE_PRESETS) and can be overridden in configs/training_*.yaml
+training_mode: QUICK_DEMO        # QUICK_DEMO | FINE_TUNE | FULL_TRAINING
+mixed_precision: fp16            # auto | fp16 | bf16 | no
+gradient_accumulation: 4
+gradient_checkpointing: true
+batch_size: 2
+learning_rate: 0.00001
+num_epochs: 10
+num_workers: 2
+optimizer: adamw                 # adamw | adamw8bit | sgd
+scheduler: cosine                # cosine | linear | constant
+warmup_steps: 100
+weight_decay: 0.01
+max_grad_norm: 1.0
+checkpoint_every_n_epochs: 1
+validate_every_n_epochs: 1
+save_top_k: 3
+early_stopping_patience: 5
+resume: true
+log_every_n_steps: 10
+sample_data_mode: true           # allow the procedurally generated sample dataset
+tracker: tensorboard             # tensorboard | wandb | none

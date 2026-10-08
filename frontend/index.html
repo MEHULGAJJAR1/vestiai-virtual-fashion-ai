@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>VestiAI — AI Virtual Try-On</title>
+<meta name="description" content="VestiAI: real-time pose-aware garment tracking plus a fine-tuned diffusion virtual try-on model." />
+<link rel="icon" href="/static/assets/favicon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="/static/css/styles.css" />
+</head>
+<body>
+<div class="app">
+  <!-- ============================================================ sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-mark">V</div>
+      <div>
+        <div class="brand-name">VestiAI</div>
+        <div class="brand-sub">virtual try-on</div>
+      </div>
+    </div>
+
+    <button class="nav-item active" data-view="home"><span class="ico">◈</span> Home</button>
+    <button class="nav-item" data-view="live"><span class="ico">◉</span> Live Try-On</button>
+    <button class="nav-item" data-view="closet"><span class="ico">▢</span> My Closet</button>
+    <button class="nav-item" data-view="outfits"><span class="ico">✚</span> Outfit Builder</button>
+    <div class="nav-sep"></div>
+    <button class="nav-item" data-view="training"><span class="ico">◐</span> AI Training</button>
+    <button class="nav-item" data-view="status"><span class="ico">⌁</span> Model Status</button>
+    <button class="nav-item" data-view="settings"><span class="ico">⚙</span> Settings</button>
+    <button class="nav-item" data-view="about"><span class="ico">ⓘ</span> About</button>
+
+    <div class="nav-foot">
+      <div class="row" style="gap:6px;margin-bottom:6px">
+        <span class="dot" id="nav-status-dot"></span>
+        <span id="nav-status-text">connecting…</span>
+      </div>
+      <div>v<span id="nav-version">1.0.0</span> · <a href="/docs" target="_blank" rel="noopener">API docs</a></div>
+    </div>
+  </aside>
+
+  <!-- ============================================================ main -->
+  <div class="main">
+    <header class="topbar">
+      <button class="btn icon menu-btn" id="menu-btn" title="Menu">☰</button>
+      <h1 id="view-title">Home</h1>
+      <div class="spacer"></div>
+      <div class="topbar-meta">
+        <span class="badge" id="badge-device"><span class="dot"></span> device</span>
+        <span class="badge" id="badge-backend"><span class="dot"></span> backend</span>
+        <span class="badge" id="badge-checkpoint"><span class="dot"></span> checkpoint</span>
+        <button class="btn sm" id="btn-refresh-top" title="Refresh status">⟳</button>
+      </div>
+    </header>
+
+    <!-- ======================================================== HOME -->
+    <section class="view" id="view-home">
+      <div class="card hero" style="margin-bottom:16px">
+        <div class="row" style="align-items:flex-start;gap:26px">
+          <div style="flex:1 1 420px;min-width:280px">
+            <div class="badge info" style="margin-bottom:10px">Dual-pipeline · CV + deep learning</div>
+            <h1 class="hero-title">See any garment <span class="g">on you</span>, live.</h1>
+            <p>
+              Upload a product photo of a t-shirt, shirt, jacket, kurta or dress. VestiAI removes the
+              background, builds a garment mask, classifies the category and then either
+              <b>tracks it onto your body in real time</b> (pose landmarks → affine/perspective warp)
+              or <b>synthesises a photorealistic try-on</b> with a fine-tuned diffusion model.
+            </p>
+            <div class="btn-row" style="margin-top:14px">
+              <button class="btn primary" data-go="live">◉ Start live try-on</button>
+              <button class="btn" data-go="closet">▢ Upload a garment</button>
+              <button class="btn ghost" id="home-sample-closet">✨ Generate sample garments</button>
+            </div>
+          </div>
+          <div style="flex:0 1 380px;min-width:260px">
+            <div class="card tight" style="background:rgba(0,0,0,.25)">
+              <h3 style="margin-bottom:10px">System readiness</h3>
+              <div class="status-list" id="home-status-list"></div>
+              <div id="home-warnings" style="margin-top:12px"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid cols-4" style="margin-bottom:16px">
+        <div class="stat"><div class="label">Garments in closet</div><div class="value" id="home-stat-garments">—</div></div>
+        <div class="stat"><div class="label">Saved try-ons</div><div class="value" id="home-stat-results">—</div></div>
+        <div class="stat"><div class="label">Live FPS (last session)</div><div class="value" id="home-stat-fps">—</div></div>
+        <div class="stat"><div class="label">AI backend</div><div class="value" id="home-stat-backend" style="font-size:.98rem">—</div></div>
+      </div>
+
+      <div class="grid cols-2">
+        <div class="card accent-left">
+          <div class="card-head"><h2>Two pipelines, one UI</h2></div>
+          <div class="pipeline" style="margin-bottom:12px">
+            <span class="step">webcam</span><span class="arrow">→</span>
+            <span class="step">BlazePose 33 landmarks</span><span class="arrow">→</span>
+            <span class="step">smoothed anchors</span><span class="arrow">→</span>
+            <span class="step">warp + occlusion</span><span class="arrow">→</span>
+            <span class="step">composite</span>
+          </div>
+          <p class="dim" style="font-size:.88rem">
+            <b>Fast mode</b> runs entirely from pose geometry: 10–30 ms per frame on a laptop CPU,
+            no GPU needed. Texture and transparency are preserved exactly; fabric folds and lighting
+            are not synthesised.
+          </p>
+          <p class="dim" style="font-size:.88rem">
+            <b>AI mode</b> calls your fine-tuned diffusion model at a throttled interval (default every
+            700 ms) and reuses the cached frame in between, so the live view stays fluid and the
+            garment never flickers.
+          </p>
+        </div>
+        <div class="card accent-left">
+          <div class="card-head"><h2>Train it on your own data</h2></div>
+          <p class="dim" style="font-size:.88rem">
+            VestiAI ships a real training pipeline: dataset preparation (VITON-HD / DressCode layout),
+            augmentation, AMP, gradient accumulation and checkpointing, validation with generated
+            samples, TensorBoard/W&B metrics, evaluation metrics and export — all runnable from the
+            <b>AI Training</b> page or the CLI.
+          </p>
+          <pre style="margin:8px 0">python scripts/train.py --mode QUICK_DEMO     # verify (minutes)
+python scripts/train.py --mode FINE_TUNE      # adapt on your GPU
+python scripts/evaluate.py --checkpoint checkpoints/best_model</pre>
+          <button class="btn sm" data-go="training">Open training dashboard →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================== LIVE -->
+    <section class="view hidden" id="view-live">
+      <div class="grid live">
+        <div>
+          <div class="stage-wrap" id="stage-wrap">
+            <video id="camera" playsinline autoplay muted></video>
+            <canvas class="overlay" id="overlay"></canvas>
+            <div class="hud">
+              <span class="chip">FPS <b id="hud-fps">0</b></span>
+              <span class="chip">frame <b id="hud-latency">0</b> ms</span>
+              <span class="chip" id="hud-pose-chip"><span class="dot" id="hud-pose-dot"></span> pose <b id="hud-pose">—</b></span>
+              <span class="chip" id="hud-garment-chip"><span class="dot" id="hud-garment-dot"></span> <b id="hud-garment">no garment</b></span>
+              <span class="chip" id="hud-ai-chip">AI <b id="hud-ai">off</b></span>
+              <span class="chip" id="hud-gpu">GPU <b>—</b></span>
+            </div>
+            <div class="stage-empty" id="stage-empty">
+              <div>
+                <div class="big">◉</div>
+                <h2>Camera is off</h2>
+                <p style="max-width:420px;margin:6px auto 14px">
+                  Select or upload a garment, then press <b>Start Camera</b>. Your video never
+                  leaves your machine in Fast mode — pose tracking runs in your browser.
+                </p>
+                <button class="btn primary" id="btn-start-camera">▶ Start Camera</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card tight" style="margin-top:14px">
+            <div class="btn-row">
+              <button class="btn primary" id="btn-start">▶ Start Camera</button>
+              <button class="btn danger" id="btn-stop" disabled>■ Stop Camera</button>
+              <button class="btn" id="btn-capture" disabled>◙ Capture Photo</button>
+              <button class="btn" id="btn-record" disabled>● Record</button>
+              <button class="btn" id="btn-mirror">⇄ Mirror</button>
+              <button class="btn" id="btn-fullscreen">⛶ Fullscreen</button>
+              <button class="btn" id="btn-next-garment">↻ Change Outfit</button>
+              <button class="btn" id="btn-remove-garment">✕ Remove Garment</button>
+              <button class="btn" id="btn-gestures">✋ Gesture Mode</button>
+              <button class="btn" id="btn-reset">⟲ Reset</button>
+              <button class="btn" id="btn-upload-live">⬆ Upload Garment</button>
+            </div>
+            <div class="row" style="margin-top:12px;gap:16px">
+              <div class="seg" id="seg-quality">
+                <button data-quality="fast" class="active">⚡ Fast mode</button>
+                <button data-quality="ai">✦ AI mode</button>
+              </div>
+              <label class="switch"><input type="checkbox" id="opt-skeleton" /> show skeleton</label>
+              <label class="switch"><input type="checkbox" id="opt-smooth" checked /> smoothing</label>
+              <label class="switch"><input type="checkbox" id="opt-server" /> server-side refine (WebSocket)</label>
+            </div>
+            <div class="field-hint" id="live-hint" style="margin-top:8px"></div>
+          </div>
+
+          <div class="card" style="margin-top:14px">
+            <div class="card-head"><h3>Quick garment picker</h3><div class="spacer"></div>
+              <button class="btn xs" id="btn-refresh-closet-live">⟳</button></div>
+            <div class="img-strip" id="live-garment-strip"></div>
+          </div>
+        </div>
+
+        <div class="col">
+          <div class="card">
+            <div class="card-head"><h3>Selected garment</h3><div class="spacer"></div>
+              <span class="badge" id="live-category">—</span></div>
+            <div class="slot" id="live-garment-slot"><span class="muted">No garment selected</span></div>
+            <div class="row" style="margin-top:10px">
+              <span class="badge" id="live-garment-name">—</span>
+              <span class="badge" id="live-garment-palette"></span>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head"><h3>Tracking status</h3></div>
+            <div class="status-list">
+              <div class="status-row"><span class="name">Pose detection</span><span class="spacer"></span><span class="val" id="st-pose">idle</span><span class="dot" id="st-pose-dot"></span></div>
+              <div class="status-row"><span class="name">Segmentation</span><span class="spacer"></span><span class="val" id="st-seg">idle</span></div>
+              <div class="status-row"><span class="name">Garment tracking</span><span class="spacer"></span><span class="val" id="st-track">idle</span></div>
+              <div class="status-row"><span class="name">Transform</span><span class="spacer"></span><span class="val" id="st-transform">—</span></div>
+              <div class="status-row"><span class="name">Inference latency</span><span class="spacer"></span><span class="val" id="st-latency">—</span></div>
+              <div class="status-row"><span class="name">Device</span><span class="spacer"></span><span class="val" id="st-device">—</span></div>
+              <div class="status-row"><span class="name">Model</span><span class="spacer"></span><span class="val" id="st-model">—</span></div>
+              <div class="status-row"><span class="name">Gesture</span><span class="spacer"></span><span class="val" id="st-gesture">off</span></div>
+            </div>
+            <div class="field-hint" style="margin-top:10px">
+              Gestures (Gesture Mode on): 🖐 open palm = next outfit · ✊ fist = previous ·
+              👍 thumbs up = capture · ✌ victory = toggle Fast/AI · pinch = move garment.
+            </div>
+          </div>
+
+          <div class="card" id="live-recent">
+            <div class="card-head"><h3>Recent captures</h3><div class="spacer"></div>
+              <button class="btn xs" data-go="closet">Closet</button></div>
+            <div class="img-strip" id="live-captures"></div>
+            <div class="field-hint">Photos and recordings are stored in <code>captures/</code>.</div>
+          </div>
+
+          <div class="card">
+            <div class="card-head"><h3>Live inference settings</h3></div>
+            <label class="field"><span>AI refresh interval — <b id="lbl-interval">700</b> ms</span>
+              <input type="range" id="live-interval" min="100" max="3000" step="50" value="700" /></label>
+            <label class="field"><span>Landmark smoothing — <b id="lbl-smooth">0.45</b></span>
+              <input type="range" id="live-smoothing" min="0" max="0.9" step="0.05" value="0.45" /></label>
+            <label class="field"><span>AI resolution</span>
+              <select id="live-resolution">
+                <option value="256">256 px (fast)</option>
+                <option value="512" selected>512 px (balanced)</option>
+                <option value="768">768 px (quality)</option>
+              </select></label>
+            <button class="btn sm block" id="btn-apply-live">Apply</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================== CLOSET -->
+    <section class="view hidden" id="view-closet">
+      <div class="split">
+        <div>
+          <div class="card" style="margin-bottom:16px">
+            <div class="card-head">
+              <h2>My Closet</h2>
+              <div class="spacer"></div>
+              <span class="badge" id="closet-count">0 items</span>
+              <button class="btn sm" id="btn-closet-refresh">⟳</button>
+            </div>
+            <div class="dropzone" id="dropzone">
+              <div style="font-size:2rem">⬆</div>
+              <h3 style="margin:6px 0 4px">Drop garment images here</h3>
+              <p style="margin:0;font-size:.86rem">JPG, PNG or WebP · single garment on a plain background works best ·
+                 uploads from Amazon/Flipkart are processed locally, nothing is sent anywhere.</p>
+              <div class="row center" style="justify-content:center;margin-top:12px">
+                <button class="btn primary sm" id="btn-browse">Choose files</button>
+                <button class="btn sm" id="btn-sample-closet">✨ Generate samples</button>
+                <select id="upload-category" style="max-width:180px">
+                  <option value="">Auto-detect category</option>
+                  <option value="t-shirt">T-Shirt</option><option value="shirt">Shirt</option>
+                  <option value="jacket">Jacket</option><option value="kurta">Kurta</option>
+                  <option value="dress">Dress</option><option value="top">Top</option>
+                  <option value="sweater">Sweater</option><option value="traditional">Traditional</option>
+                  <option value="formal">Formal</option><option value="bottom">Bottom</option>
+                  <option value="shoes">Shoes</option><option value="accessory">Accessory</option>
+                </select>
+              </div>
+            </div>
+            <input type="file" id="file-input" accept="image/*" multiple />
+            <div id="upload-progress" style="margin-top:12px"></div>
+          </div>
+
+          <div class="tabs" id="closet-tabs"></div>
+          <div class="garment-grid" id="closet-grid"></div>
+          <div id="closet-empty" class="card center hidden" style="margin-top:8px">
+            <h3>Your closet is empty</h3>
+            <p>Upload a garment image, or click <b>Generate samples</b> to create ten procedurally
+               generated garments so you can try the whole flow without downloading anything.</p>
+          </div>
+        </div>
+
+        <div class="col">
+          <div class="card">
+            <div class="card-head"><h3>Preprocessing pipeline</h3></div>
+            <ul class="checklist">
+              <li><span class="mark">①</span><span>Decode + EXIF fix, reject &lt; 160 px</span></li>
+              <li><span class="mark">②</span><span>Background removal (rembg if installed, else GrabCut)</span></li>
+              <li><span class="mark">③</span><span>Alpha refinement + largest-component keep</span></li>
+              <li><span class="mark">④</span><span>Quality gate: skin-ratio, aspect, coverage</span></li>
+              <li><span class="mark">⑤</span><span>Category classification (CLIP → head → rules)</span></li>
+              <li><span class="mark">⑥</span><span>Bbox crop → 768 px square canvas + mask</span></li>
+              <li><span class="mark">⑦</span><span>Palette extraction + closet record</span></li>
+            </ul>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>Quality report</h3></div>
+            <div id="closet-quality"><span class="muted">Upload a garment to see its report.</span></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>Rejected uploads</h3></div>
+            <p style="font-size:.84rem;margin:0" class="dim">
+              VestiAI refuses full-body model photos, heavily occluded garments and low-resolution
+              thumbnails — they would produce a bad try-on. Answers explain exactly what to upload
+              instead, and you can override the gate per upload.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================== OUTFITS -->
+    <section class="view hidden" id="view-outfits">
+      <div class="grid cols-3" style="margin-bottom:16px">
+        <div class="card" style="grid-column:span 2">
+          <div class="card-head"><h2>Outfit Builder</h2><div class="spacer"></div>
+            <span class="badge" id="outfit-style-badge">Casual</span></div>
+          <div class="row" style="margin-bottom:14px">
+            <div class="seg" id="seg-style"></div>
+            <button class="btn sm primary" id="btn-auto-outfit">✨ Auto-build</button>
+            <button class="btn sm" id="btn-random-outfit">🎲 Surprise me</button>
+            <button class="btn sm" id="btn-try-outfit" disabled>◉ Try this outfit</button>
+          </div>
+          <div class="grid cols-4" id="outfit-slots"></div>
+          <div id="outfit-notes" style="margin-top:12px"></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><h3>Colour harmony</h3></div>
+          <div id="outfit-pairing"><span class="muted">Select a top to see pairings.</span></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-head"><h2>AI recommendations</h2><div class="spacer"></div>
+          <span class="badge info" id="reco-engine">colour rules</span></div>
+        <p style="font-size:.86rem" class="dim">Ranked from the colours, categories and saturation of the
+          garments in your closet (explainable rules — no black-box claims).</p>
+        <div class="garment-grid" id="reco-grid"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h2>Top + bottom combinations</h2></div>
+        <div id="combo-list"><span class="muted">Add at least one top and one bottom to your closet.</span></div>
+      </div>
+    </section>
+
+    <!-- ======================================================== TRAINING -->
+    <section class="view hidden" id="view-training">
+      <div class="grid cols-4" style="margin-bottom:16px">
+        <div class="stat compact"><div class="label">Dataset</div><div class="value" id="tr-dataset">—</div></div>
+        <div class="stat compact"><div class="label">Epoch</div><div class="value" id="tr-epoch">—</div></div>
+        <div class="stat compact"><div class="label">Train loss</div><div class="value" id="tr-loss">—</div></div>
+        <div class="stat compact"><div class="label">Val loss</div><div class="value" id="tr-valloss">—</div></div>
+        <div class="stat compact"><div class="label">GPU memory</div><div class="value" id="tr-vram">—</div></div>
+        <div class="stat compact"><div class="label">Elapsed / ETA</div><div class="value" id="tr-time" style="font-size:.92rem">—</div></div>
+        <div class="stat compact"><div class="label">Checkpoint</div><div class="value" id="tr-checkpoint" style="font-size:.86rem">—</div></div>
+        <div class="stat compact"><div class="label">Model status</div><div class="value" id="tr-model" style="font-size:.86rem">—</div></div>
+      </div>
+
+      <div class="split" style="margin-bottom:16px">
+        <div class="card">
+          <div class="card-head"><h2>Start a run</h2><div class="spacer"></div>
+            <span class="badge" id="tr-job-state">idle</span></div>
+          <div class="row" style="margin-bottom:12px">
+            <div class="seg" id="seg-mode">
+              <button data-mode="QUICK_DEMO" class="active">QUICK_DEMO</button>
+              <button data-mode="FINE_TUNE">FINE_TUNE</button>
+              <button data-mode="FULL_TRAINING">FULL_TRAINING</button>
+            </div>
+          </div>
+          <p id="tr-mode-desc" class="dim" style="font-size:.86rem"></p>
+          <div class="grid cols-2">
+            <label class="field"><span>Dataset</span><select id="tr-dataset-select"></select></label>
+            <label class="field"><span>Resolution</span>
+              <select id="tr-resolution"><option>256</option><option selected>512</option><option>768</option></select></label>
+            <label class="field"><span>Batch size</span><input type="number" id="tr-batch" value="1" min="1" max="32" /></label>
+            <label class="field"><span>Epochs</span><input type="number" id="tr-epochs" value="2" min="1" max="200" /></label>
+            <label class="field"><span>Learning rate</span><input type="number" id="tr-lr" value="0.00001" step="0.000001" /></label>
+            <label class="field"><span>Grad accumulation</span><input type="number" id="tr-accum" value="2" min="1" max="64" /></label>
+          </div>
+          <div class="row" style="gap:14px;margin-bottom:12px">
+            <label class="switch"><input type="checkbox" id="tr-lora" /> LoRA on UNet (FINE_TUNE)</label>
+            <label class="switch"><input type="checkbox" id="tr-perceptual" /> perceptual loss</label>
+            <label class="switch"><input type="checkbox" id="tr-dry" /> dry run (2 steps)</label>
+          </div>
+          <div id="tr-warning"></div>
+          <div class="btn-row" style="margin-top:10px">
+            <button class="btn primary" id="btn-start-training">▶ Start training</button>
+            <button class="btn danger" id="btn-stop-training" disabled>■ Stop</button>
+            <button class="btn" id="btn-prepare-samples">⚙ Generate sample dataset</button>
+            <button class="btn" id="btn-refresh-training">⟳ Refresh</button>
+          </div>
+          <div class="field-hint" style="margin-top:10px" id="tr-cli-hint"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h3>Progress</h3></div>
+          <div class="progress" style="margin-bottom:10px"><i id="tr-progress-bar" style="width:0%"></i></div>
+          <div class="status-list">
+            <div class="status-row"><span class="name">State</span><span class="spacer"></span><span class="val" id="tr-state">idle</span></div>
+            <div class="status-row"><span class="name">Step</span><span class="spacer"></span><span class="val" id="tr-step">0</span></div>
+            <div class="status-row"><span class="name">Learning rate</span><span class="spacer"></span><span class="val" id="tr-lr-live">—</span></div>
+            <div class="status-row"><span class="name">Device · precision</span><span class="spacer"></span><span class="val" id="tr-device">—</span></div>
+            <div class="status-row"><span class="name">Trainable params</span><span class="spacer"></span><span class="val" id="tr-params">—</span></div>
+          </div>
+          <div id="tr-warnings" style="margin-top:12px"></div>
+          <h3 style="margin-top:16px">Log</h3>
+          <div class="log" id="tr-log">No run yet.</div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-head"><h2>Metrics</h2><div class="spacer"></div>
+          <a class="btn xs" href="/api/training/curves/image" target="_blank" rel="noopener">open plot</a></div>
+        <div class="grid cols-2">
+          <div>
+            <div class="legend"><span><i style="background:#7aa2f7"></i>train loss</span><span><i style="background:#f7768e"></i>val loss</span></div>
+            <svg class="chart" id="chart-loss" viewBox="0 0 400 180" preserveAspectRatio="none"></svg>
+          </div>
+          <div>
+            <div class="legend"><span><i style="background:#9ece6a"></i>SSIM</span><span><i style="background:#e0af68"></i>PSNR</span><span><i style="background:#bb9af7"></i>masked L1</span></div>
+            <svg class="chart" id="chart-quality" viewBox="0 0 400 180" preserveAspectRatio="none"></svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid cols-2" style="margin-bottom:16px">
+        <div class="card">
+          <div class="card-head"><h2>Validation samples</h2><div class="spacer"></div>
+            <span class="badge" id="tr-val-badge">none</span></div>
+          <div class="img-strip" id="tr-validation-grids"><span class="muted">Generate a run to see
+            person | garment | agnostic | generated | ground-truth grids.</span></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><h2>Checkpoints</h2><div class="spacer"></div>
+            <button class="btn xs" id="btn-reload-model">⟳ Reload model</button></div>
+          <div id="tr-checkpoints"><span class="muted">No checkpoints yet.</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h2>Evaluation reports</h2><div class="spacer"></div>
+          <span class="badge info">python scripts/evaluate.py</span></div>
+        <div id="tr-evaluations"><span class="muted">No evaluation runs yet.</span></div>
+      </div>
+    </section>
+
+    <!-- ======================================================== STATUS -->
+    <section class="view hidden" id="view-status">
+      <div class="grid cols-2" style="margin-bottom:16px">
+        <div class="card">
+          <div class="card-head"><h2>Compute device</h2></div>
+          <div id="status-device"></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><h2>Try-on backend</h2><div class="spacer"></div>
+            <button class="btn xs" id="btn-reload-backend">⟳ Reload checkpoint</button></div>
+          <div id="status-adapter"></div>
+          <div class="row" style="margin-top:12px">
+            <button class="btn sm" data-backend="auto">Auto</button>
+            <button class="btn sm" data-backend="diffusion">Force diffusion</button>
+            <button class="btn sm" data-backend="lightweight">Force lightweight</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-head"><h2>Dependency checklist</h2><div class="spacer"></div>
+          <span class="badge" id="status-deps-badge">—</span></div>
+        <div id="status-components"></div>
+      </div>
+
+      <div class="grid cols-2">
+        <div class="card">
+          <div class="card-head"><h2>Checkpoints on disk</h2></div>
+          <div id="status-checkpoints"></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><h2>Storage</h2></div>
+          <div id="status-disk"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================== SETTINGS -->
+    <section class="view hidden" id="view-settings">
+      <div class="grid cols-2">
+        <div class="card">
+          <div class="card-head"><h2>Try-on</h2></div>
+          <label class="field"><span>Backend</span>
+            <select id="set-backend">
+              <option value="auto">auto — diffusion when available, else lightweight</option>
+              <option value="diffusion">diffusion only</option>
+              <option value="lightweight">lightweight only</option>
+              <option value="disabled">disabled</option>
+            </select></label>
+          <label class="field"><span>AI resolution</span>
+            <select id="set-resolution"><option>256</option><option>512</option><option>768</option><option>1024</option></select></label>
+          <label class="field"><span>Diffusion steps — <b id="lbl-steps">30</b></span>
+            <input type="range" id="set-steps" min="4" max="60" value="30" /></label>
+          <label class="field"><span>Guidance scale — <b id="lbl-guidance">2.0</b></span>
+            <input type="range" id="set-guidance" min="1" max="10" step="0.1" value="2" /></label>
+          <label class="field"><span>Random seed</span><input type="number" id="set-seed" value="42" /></label>
+          <label class="switch"><input type="checkbox" id="set-cpu-diffusion" /> allow CPU diffusion (≈1 min/image)</label>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h2>Real-time tracking</h2></div>
+          <label class="field"><span>Landmark smoothing — <b id="lbl-smoothing2">0.45</b></span>
+            <input type="range" id="set-smoothing" min="0" max="0.9" step="0.05" value="0.45" /></label>
+          <label class="field"><span>AI refresh interval — <b id="lbl-interval2">700</b> ms</span>
+            <input type="range" id="set-interval" min="100" max="3000" step="50" value="700" /></label>
+          <label class="field"><span>Background removal</span>
+            <select id="set-bg">
+              <option value="auto">auto (rembg → GrabCut)</option>
+              <option value="rembg">rembg only</option>
+              <option value="grabcut">GrabCut (classical CV)</option>
+              <option value="none">none</option>
+            </select></label>
+          <label class="switch"><input type="checkbox" id="set-segmentation" checked /> body segmentation</label>
+          <label class="switch" style="margin-top:8px"><input type="checkbox" id="set-force-cpu" /> force CPU (ignore GPU)</label>
+          <label class="field" style="margin-top:12px"><span>Fit tuning per category (width ×, length ×)</span></label>
+          <div id="set-fit-tuning" class="grid cols-2"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h2>Training defaults</h2></div>
+          <div class="grid cols-2">
+            <label class="field"><span>Batch size</span><input type="number" id="set-batch" min="1" max="64" /></label>
+            <label class="field"><span>Epochs</span><input type="number" id="set-epochs" min="1" max="500" /></label>
+            <label class="field"><span>Learning rate</span><input type="number" id="set-lr" step="0.000001" /></label>
+            <label class="field"><span>Grad accumulation</span><input type="number" id="set-accum" min="1" max="64" /></label>
+            <label class="field"><span>Mixed precision</span>
+              <select id="set-precision"><option>auto</option><option>fp16</option><option>bf16</option><option>no</option></select></label>
+            <label class="field"><span>Tracker</span>
+              <select id="set-tracker"><option>tensorboard</option><option>wandb</option><option>none</option></select></label>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h2>Paths &amp; runtime</h2></div>
+          <div id="set-paths"></div>
+          <div class="row" style="margin-top:12px">
+            <button class="btn sm" id="btn-clear-cache">Free GPU cache</button>
+            <button class="btn sm" id="btn-export-settings">Download config (YAML)</button>
+          </div>
+        </div>
+
+        <div class="card" style="grid-column:1/-1">
+          <div class="row">
+            <button class="btn primary" id="btn-save-settings">💾 Save settings</button>
+            <button class="btn" id="btn-reset-settings">Reset to server defaults</button>
+            <span class="spacer"></span>
+            <span class="badge" id="set-status">—</span>
+          </div>
+          <div class="field-hint" style="margin-top:8px">
+            Settings marked with a slider apply immediately to running live sessions. Values that need a
+            model reload (resolution/steps for diffusion) are applied on the next inference call.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================== ABOUT -->
+    <section class="view hidden" id="view-about">
+      <div class="card hero" style="margin-bottom:16px">
+        <h1>About VestiAI</h1>
+        <p id="about-tagline" style="max-width:760px"></p>
+        <div class="row">
+          <span class="badge info">FastAPI</span>
+          <span class="badge info">MediaPipe BlazePose</span>
+          <span class="badge info">OpenCV</span>
+          <span class="badge info">PyTorch + Diffusers</span>
+          <span class="badge info">ControlNet inpainting</span>
+          <span class="badge info">VITON-HD / DressCode compatible</span>
+        </div>
+      </div>
+      <div class="grid cols-2" style="margin-bottom:16px">
+        <div class="card"><div class="card-head"><h2>Pipelines</h2></div><div id="about-pipelines"></div></div>
+        <div class="card"><div class="card-head"><h2>Honest limitations</h2></div><div id="about-honesty"></div></div>
+      </div>
+      <div class="grid cols-2">
+        <div class="card">
+          <div class="card-head"><h2>Workflow</h2></div>
+          <ol style="color:var(--text-dim);font-size:.88rem;line-height:1.9;padding-left:18px">
+            <li>Upload a garment product photo → preprocessing runs automatically.</li>
+            <li>Select it in <b>Live Try-On</b> and press <b>Start Camera</b>.</li>
+            <li>Move around: the garment follows your shoulders, torso and arms.</li>
+            <li>Leave the frame → the garment hides; return → it comes back.</li>
+            <li>Toggle <b>AI mode</b> for diffusion-quality frames at a throttled rate.</li>
+            <li>Capture a photo or record a clip to keep the result.</li>
+          </ol>
+        </div>
+        <div class="card">
+          <div class="card-head"><h2>API surface</h2><div class="spacer"></div>
+            <a class="btn xs" href="/docs" target="_blank" rel="noopener">Swagger UI</a></div>
+          <div class="log" id="about-endpoints">loading…</div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<!-- upload modal for the live page -->
+<div class="modal-backdrop hidden" id="upload-modal">
+  <div class="modal">
+    <div class="card-head"><h2>Add a garment</h2><div class="spacer"></div>
+      <button class="btn sm" id="upload-modal-close">✕</button></div>
+    <div class="split">
+      <div>
+        <div class="dropzone" id="modal-dropzone">
+          <div style="font-size:1.8rem">⬆</div>
+          <p style="margin:6px 0 0">Drop an image or click to browse</p>
+          <input type="file" id="modal-file" accept="image/*" />
+        </div>
+        <div class="row" style="margin-top:12px">
+          <select id="modal-category">
+            <option value="">Auto-detect</option>
+            <option value="t-shirt">T-Shirt</option><option value="shirt">Shirt</option>
+            <option value="jacket">Jacket</option><option value="kurta">Kurta</option>
+            <option value="dress">Dress</option><option value="top">Top</option>
+            <option value="sweater">Sweater</option><option value="traditional">Traditional</option>
+            <option value="bottom">Bottom</option><option value="shoes">Shoes</option>
+          </select>
+          <label class="switch"><input type="checkbox" id="modal-force" /> accept anyway (skip quality gate)</label>
+        </div>
+        <div class="btn-row" style="margin-top:12px">
+          <button class="btn" id="modal-preview-btn" disabled>Preview &amp; validate</button>
+          <button class="btn primary" id="modal-upload-btn" disabled>Add to closet</button>
+        </div>
+      </div>
+      <div>
+        <div class="card tight">
+          <h3>Preview</h3>
+          <div id="modal-preview" class="center"><span class="muted">No image selected</span></div>
+          <div id="modal-report" style="margin-top:10px"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toasts"></div>
+
+<script src="/static/js/utils.js"></script>
+<script src="/static/js/api.js"></script>
+<script src="/static/js/state.js"></script>
+<script src="/static/js/charts.js"></script>
+<script src="/static/js/pose.js"></script>
+<script src="/static/js/garment-align.js"></script>
+<script src="/static/js/gestures.js"></script>
+<script src="/static/js/live.js"></script>
+<script src="/static/js/closet.js"></script>
+<script src="/static/js/outfits.js"></script>
+<script src="/static/js/training.js"></script>
+<script src="/static/js/status.js"></script>
+<script src="/static/js/app.js"></script>
+</body>
+</html>

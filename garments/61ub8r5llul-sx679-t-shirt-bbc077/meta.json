@@ -1,0 +1,51 @@
+{
+  "key": "61ub8r5llul-sx679-t-shirt-bbc077",
+  "filename": "61UB8r5LlUL._SX679_.jpg",
+  "quality": {
+    "width": 679,
+    "height": 853,
+    "coverage": 0.5663,
+    "issues": [],
+    "warnings": [],
+    "bbox": [
+      13,
+      88,
+      665,
+      786
+    ],
+    "aspect_ratio": 1.071,
+    "fill_ratio": 0.0139,
+    "skin_ratio": 0.0,
+    "hole_ratio": 0.0,
+    "ok": true,
+    "background_removal": "grabcut"
+  },
+  "classification": {
+    "category": "t-shirt",
+    "confidence": 1.0,
+    "method": "user_override",
+    "scores": {
+      "formal": 1.0,
+      "jacket": 0.806,
+      "shirt": 0.768,
+      "sweater": 0.535,
+      "t-shirt": 0.353,
+      "top": 0.145
+    },
+    "notes": [
+      "Category set by the user (auto-detected: formal)."
+    ]
+  },
+  "palette": [
+    "#f5f8fa",
+    "#090a0a",
+    "#171819",
+    "#8e8e8d"
+  ],
+  "created_at": 1791380338.5255208,
+  "source": {
+    "kind": "upload",
+    "filename": "61UB8r5LlUL._SX679_.jpg",
+    "content_type": "image/jpeg"
+  }
+}

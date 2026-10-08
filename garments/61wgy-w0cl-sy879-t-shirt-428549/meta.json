@@ -1,0 +1,51 @@
+{
+  "key": "61wgy-w0cl-sy879-t-shirt-428549",
+  "filename": "61WGy-+w0cL._SY879_.jpg",
+  "quality": {
+    "width": 586,
+    "height": 879,
+    "coverage": 0.3545,
+    "issues": [],
+    "warnings": [],
+    "bbox": [
+      108,
+      29,
+      531,
+      712
+    ],
+    "aspect_ratio": 1.615,
+    "fill_ratio": 0.0158,
+    "skin_ratio": 0.1338,
+    "hole_ratio": 0.0,
+    "ok": true,
+    "background_removal": "grabcut"
+  },
+  "classification": {
+    "category": "t-shirt",
+    "confidence": 1.0,
+    "method": "user_override",
+    "scores": {
+      "formal": 0.36,
+      "jacket": 0.253,
+      "sweater": 0.205,
+      "traditional": 0.147,
+      "kurta": 0.124,
+      "shirt": 0.108
+    },
+    "notes": [
+      "Category set by the user (auto-detected: formal)."
+    ]
+  },
+  "palette": [
+    "#e8ad40",
+    "#c0866c",
+    "#e7b7a1",
+    "#482c20"
+  ],
+  "created_at": 1791380231.260061,
+  "source": {
+    "kind": "upload",
+    "filename": "61WGy-+w0cL._SY879_.jpg",
+    "content_type": "image/jpeg"
+  }
+}

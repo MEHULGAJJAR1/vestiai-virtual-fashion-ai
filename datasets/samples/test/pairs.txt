@@ -1,0 +1,12 @@
+02000_00.jpg 02000_00.jpg bottom
+02001_00.jpg 02001_00.jpg jacket
+02002_00.jpg 02002_00.jpg dress
+02003_00.jpg 02003_00.jpg jacket
+02004_00.jpg 02004_00.jpg shirt
+02005_00.jpg 02005_00.jpg t-shirt
+02006_00.jpg 02006_00.jpg shirt
+02007_00.jpg 02007_00.jpg jacket
+02008_00.jpg 02008_00.jpg jacket
+02009_00.jpg 02009_00.jpg dress
+02010_00.jpg 02010_00.jpg t-shirt
+02011_00.jpg 02011_00.jpg top

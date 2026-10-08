@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="VestiAI">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7c5cff"/>
+      <stop offset="100%" stop-color="#22d3ee"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="15" fill="#0b0d14"/>
+  <rect x="2" y="2" width="60" height="60" rx="13" fill="none" stroke="url(#bg)" stroke-width="2" opacity="0.85"/>
+  <!-- hanger -->
+  <path d="M32 14.5a4.5 4.5 0 0 1 4.5 4.5c0 2.1-1.4 3.3-3 4.1v2.2l11.7 6.2c1.6.85 2.3 1.8 2.3 3.4v1.6H16.5v-1.6c0-1.6.7-2.55 2.3-3.4L30.5 25.3v-2.2c-1.6-.8-3-2-3-4.1A4.5 4.5 0 0 1 32 14.5Z"
+        fill="none" stroke="url(#bg)" stroke-width="2.6" stroke-linejoin="round"/>
+  <!-- stitch / AI pulse -->
+  <path d="M22 44.5h7M35 44.5h7" stroke="#7c5cff" stroke-width="2.6" stroke-linecap="round"/>
+  <circle cx="32" cy="44.5" r="2.6" fill="#22d3ee"/>
+</svg>

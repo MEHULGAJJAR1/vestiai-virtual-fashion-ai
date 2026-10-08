@@ -1,0 +1,53 @@
+{
+  "key": "sample-jacket-3-jacket-0e102f",
+  "filename": "sample_jacket_2.png",
+  "quality": {
+    "width": 640,
+    "height": 800,
+    "coverage": 0.3383,
+    "issues": [
+      "About 20% skin tones detected \u2014 this is probably a photo of a person wearing the garment, not the garment itself."
+    ],
+    "warnings": [],
+    "bbox": [
+      144,
+      77,
+      497,
+      627
+    ],
+    "aspect_ratio": 1.558,
+    "fill_ratio": 0.0112,
+    "skin_ratio": 0.2007,
+    "hole_ratio": 0.0,
+    "ok": false,
+    "background_removal": "grabcut"
+  },
+  "classification": {
+    "category": "jacket",
+    "confidence": 0.389,
+    "method": "heuristic",
+    "scores": {
+      "jacket": 0.911,
+      "formal": 0.347,
+      "bottom": 0.271,
+      "traditional": 0.23,
+      "sweater": 0.192,
+      "shirt": 0.16
+    },
+    "notes": [
+      "Silhouette: aspect=1.56, fill=0.86, sleeve_mass=0.30, hem_flare=1.08"
+    ]
+  },
+  "palette": [
+    "#c7773b",
+    "#a0602f",
+    "#fefdfc",
+    "#dcc1b2"
+  ],
+  "created_at": 1791378317.8146536,
+  "source": {
+    "kind": "generated",
+    "generator": "vestiai.sample_data",
+    "license": "CC0 (procedurally generated)"
+  }
+}

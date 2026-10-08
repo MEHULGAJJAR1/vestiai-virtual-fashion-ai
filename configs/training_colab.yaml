@@ -1,0 +1,48 @@
+# ======================================================================================
+# VestiAI — cloud/notebook training (Colab / Kaggle / RunPod / SageMaker)
+#
+# Copy-paste recipe (Colab, GPU runtime):
+#   !git clone <your-repo> vestiai && cd vestiai
+#   !pip install -r requirements.txt -r requirements-ml.txt
+#   !python scripts/prepare_dataset.py --generate --dataset datasets/samples   # or --convert
+#   !python scripts/train.py --config configs/training_colab.yaml --dataset datasets/samples
+#   # then download checkpoints/best_model and drop it into the local project's
+#   # checkpoints/best_model — the app picks it up on reload.
+#
+# Kaggle: turn on "Internet" once to fetch the base model, then save the run as a Dataset
+#         so the next session resumes without re-downloading weights.
+# RunPod: use the PyTorch 2.x CUDA template; mount a network volume at /workspace and set
+#         checkpoints_dir + datasets_dir there so a pod restart keeps the checkpoints.
+# ======================================================================================
+mode: FINE_TUNE
+dataset_root: datasets/viton_hd
+output_dir: checkpoints
+resolution: 512
+batch_size: 4
+gradient_accumulation: 2
+num_epochs: 10
+learning_rate: 0.00002
+lr_scheduler: cosine
+warmup_steps: 200
+optimizer: adamw8bit
+mixed_precision: fp16              # T4/V100 on Colab: fp16 · A100/L4: switch to bf16
+gradient_checkpointing: true
+num_workers: 2                     # notebook environments dislike many workers
+train_unet_lora: true
+lora_rank: 16
+enable_perceptual_loss: true
+enable_garment_clip_loss: false     # saves VRAM/CLIP downloads on constrained notebooks
+validate_every_n_epochs: 1
+save_every_n_epochs: 1
+validation_batches: 1
+validation_images: 4
+num_inference_steps: 24
+save_top_k: 2
+early_stopping_patience: 3
+tracker: tensorboard
+log_every_n_steps: 10
+seed: 42
+device: cuda
+resume: true
+use_xformers: false                # Colab's xformers wheel is version-fragile
+category: vestiai-vton-colab

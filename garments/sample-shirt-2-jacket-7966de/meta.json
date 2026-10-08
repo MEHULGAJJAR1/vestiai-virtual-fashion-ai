@@ -1,0 +1,51 @@
+{
+  "key": "sample-shirt-2-jacket-7966de",
+  "filename": "sample_shirt_1.png",
+  "quality": {
+    "width": 640,
+    "height": 864,
+    "coverage": 0.3084,
+    "issues": [],
+    "warnings": [],
+    "bbox": [
+      144,
+      83,
+      497,
+      635
+    ],
+    "aspect_ratio": 1.564,
+    "fill_ratio": 0.0114,
+    "skin_ratio": 0.0,
+    "hole_ratio": 0.0,
+    "ok": true,
+    "background_removal": "grabcut"
+  },
+  "classification": {
+    "category": "jacket",
+    "confidence": 0.384,
+    "method": "heuristic",
+    "scores": {
+      "jacket": 0.905,
+      "formal": 0.655,
+      "sweater": 0.193,
+      "shirt": 0.175,
+      "bottom": 0.139,
+      "kurta": 0.094
+    },
+    "notes": [
+      "Silhouette: aspect=1.56, fill=0.85, sleeve_mass=0.29, hem_flare=0.85"
+    ]
+  },
+  "palette": [
+    "#577f7f",
+    "#5b8383",
+    "#476868",
+    "#ffffff"
+  ],
+  "created_at": 1791378316.7551956,
+  "source": {
+    "kind": "generated",
+    "generator": "vestiai.sample_data",
+    "license": "CC0 (procedurally generated)"
+  }
+}

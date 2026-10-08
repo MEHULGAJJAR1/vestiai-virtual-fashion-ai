@@ -1,0 +1,13 @@
+{
+  "name": "vestiai-sample",
+  "origin": "generated",
+  "generator": "vestiai.backend.services.sample_data",
+  "size": 512,
+  "counts": {
+    "train": 48,
+    "val": 12,
+    "test": 12
+  },
+  "layout": "VITON-HD compatible (image, cloth, cloth-mask, agnostic, pose, pairs.txt)",
+  "note": "Procedurally generated for pipeline verification. Replace with real VITON-HD / DressCode data (which you download yourself under its licence) for meaningful quality training."
+}

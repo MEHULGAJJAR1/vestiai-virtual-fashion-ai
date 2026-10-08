@@ -1,0 +1,6 @@
+VestiAI sample dataset
+======================
+
+Every image in this folder was generated procedurally by VestiAI's own code (backend/services/sample_data.py). No third-party or scraped imagery is included, so the dataset is free to use for testing the training pipeline (treat as CC0).
+
+It is intended for smoke-testing ONLY: the images are cartoon-like stylised figures, so a model trained on them will not produce photorealistic results. Download VITON-HD or DressCode (see docs/TRAINING.md) for real training.

@@ -1,0 +1,39 @@
+# ---------------------------------------------------------------------------------
+# VestiAI — core runtime (enough for the API, the live try-on pipeline and the UI)
+#
+#   python -m pip install -r requirements.txt
+#   python scripts/setup.py --profile core        # same thing, with checks and hints
+#
+# Versions below are pinned to the combination that is verified by `tests/` in this repo.
+# Deep-learning extras (PyTorch, Diffusers, CLIP, rembg, LPIPS...) live in
+# requirements-ml.txt: install them only on a machine that runs training or the diffusion
+# try-on. Without them the app degrades to the geometric (lightweight) pipeline and says
+# so in the UI instead of pretending.
+# ---------------------------------------------------------------------------------
+
+# --- web layer ---------------------------------------------------------------
+fastapi==0.142.2
+uvicorn[standard]==0.54.0
+python-multipart==0.0.20
+pydantic==2.13.5
+websockets==17.2
+
+# --- imaging / classical CV --------------------------------------------------
+numpy==2.2.6
+opencv-python-headless==4.12.0.88
+Pillow==12.3.0
+scikit-image==0.25.2
+scipy==1.17.1
+
+# --- pose + segmentation (browser copy is vendored in frontend/vendor/) ------
+mediapipe==1.1.0
+
+# --- config / utils ----------------------------------------------------------
+PyYAML==6.0.2
+python-dotenv==1.2.4
+requests==2.33.0
+tqdm==4.70.1
+rich==15.0.0
+
+# --- CPU fallback classifier head (used when CLIP is unavailable) ------------
+scikit-learn==1.6.1

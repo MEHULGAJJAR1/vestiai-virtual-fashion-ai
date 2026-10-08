@@ -1,0 +1,261 @@
+{
+  "version": 1,
+  "updated_at": 1791436429.4912121,
+  "count": 4,
+  "garments": [
+    {
+      "key": "61wgy-w0cl-sy879-t-shirt-428549",
+      "label": "61Wgy +W0Cl. Sy879",
+      "category": "t-shirt",
+      "created_at": 1791380231.260318,
+      "original_name": "61WGy-+w0cL._SY879_.jpg",
+      "image_path": "/Users/mehul/Downloads/workspace-01a11667-77c7-7e1f-8ca7-c5ca06e2d0b3/vestiai/garments/61wgy-w0cl-sy879-t-shirt-428549/garment.png",
+      "mask_path": "/Users/mehul/Downloads/workspace-01a11667-77c7-7e1f-8ca7-c5ca06e2d0b3/vestiai/garments/61wgy-w0cl-sy879-t-shirt-428549/mask.png",
+      "cutout_path": "/Users/mehul/Downloads/workspace-01a11667-77c7-7e1f-8ca7-c5ca06e2d0b3/vestiai/garments/61wgy-w0cl-sy879-t-shirt-428549/cutout.png",
+      "preview_path": "/Users/mehul/Downloads/workspace-01a11667-77c7-7e1f-8ca7-c5ca06e2d0b3/vestiai/garments/61wgy-w0cl-sy879-t-shirt-428549/preview.jpg",
+      "width": 768,
+      "height": 768,
+      "canvas": 768,
+      "classification": {
+        "category": "t-shirt",
+        "confidence": 1.0,
+        "method": "user_override",
+        "scores": {
+          "formal": 0.36,
+          "jacket": 0.253,
+          "sweater": 0.205,
+          "traditional": 0.147,
+          "kurta": 0.124,
+          "shirt": 0.108
+        },
+        "notes": [
+          "Category set by the user (auto-detected: formal)."
+        ]
+      },
+      "quality": {
+        "width": 586,
+        "height": 879,
+        "coverage": 0.3545,
+        "issues": [],
+        "warnings": [],
+        "bbox": [
+          108,
+          29,
+          531,
+          712
+        ],
+        "aspect_ratio": 1.615,
+        "fill_ratio": 0.0158,
+        "skin_ratio": 0.1338,
+        "hole_ratio": 0.0,
+        "ok": true,
+        "background_removal": "grabcut"
+      },
+      "source": {
+        "kind": "upload",
+        "filename": "61WGy-+w0cL._SY879_.jpg",
+        "content_type": "image/jpeg"
+      },
+      "palette": [
+        "#e8ad40",
+        "#c0866c",
+        "#e7b7a1",
+        "#482c20"
+      ],
+      "tags": [],
+      "favourite": false,
+      "garment_type": "top"
+    },
+    {
+      "key": "61ub8r5llul-sx679-t-shirt-bbc077",
+      "label": "61Ub8R5Llul. Sx679",
+      "category": "t-shirt",
+      "created_at": 1791380338.5257332,
+      "original_name": "61UB8r5LlUL._SX679_.jpg",
+      "image_path": "/Users/mehul/Downloads/workspace-01a11667-77c7-7e1f-8ca7-c5ca06e2d0b3/vestiai/garments/61ub8r5llul-sx679-t-shirt-bbc077/garment.png",
+      "mask_path": "/Users/mehul/Downloads/workspace-01a11667-77c7-7e1f-8ca7-c5ca06e2d0b3/vestiai/garments/61ub8r5llul-sx679-t-shirt-bbc077/mask.png",
+      "cutout_path": "/Users/mehul/Downloads/workspace-01a11667-77c7-7e1f-8ca7-c5ca06e2d0b3/vestiai/garments/61ub8r5llul-sx679-t-shirt-bbc077/cutout.png",
+      "preview_path": "/Users/mehul/Downloads/workspace-01a11667-77c7-7e1f-8ca7-c5ca06e2d0b3/vestiai/garments/61ub8r5llul-sx679-t-shirt-bbc077/preview.jpg",
+      "width": 768,
+      "height": 768,
+      "canvas": 768,
+      "classification": {
+        "category": "t-shirt",
+        "confidence": 1.0,
+        "method": "user_override",
+        "scores": {
+          "formal": 1.0,
+          "jacket": 0.806,
+          "shirt": 0.768,
+          "sweater": 0.535,
+          "t-shirt": 0.353,
+          "top": 0.145
+        },
+        "notes": [
+          "Category set by the user (auto-detected: formal)."
+        ]
+      },
+      "quality": {
+        "width": 679,
+        "height": 853,
+        "coverage": 0.5663,
+        "issues": [],
+        "warnings": [],
+        "bbox": [
+          13,
+          88,
+          665,
+          786
+        ],
+        "aspect_ratio": 1.071,
+        "fill_ratio": 0.0139,
+        "skin_ratio": 0.0,
+        "hole_ratio": 0.0,
+        "ok": true,
+        "background_removal": "grabcut"
+      },
+      "source": {
+        "kind": "upload",
+        "filename": "61UB8r5LlUL._SX679_.jpg",
+        "content_type": "image/jpeg"
+      },
+      "palette": [
+        "#f5f8fa",
+        "#090a0a",
+        "#171819",
+        "#8e8e8d"
+      ],
+      "tags": [],
+      "favourite": false,
+      "garment_type": "top"
+    },
+    {
+      "key": "61wgy-w0cl-sy879-t-shirt-40d928",
+      "label": "61Wgy +W0Cl. Sy879",
+      "category": "t-shirt",
+      "created_at": 1791380406.999786,
+      "original_name": "61WGy-+w0cL._SY879_.jpg",
+      "image_path": "/Users/mehul/Downloads/workspace-01a11667-77c7-7e1f-8ca7-c5ca06e2d0b3/vestiai/garments/61wgy-w0cl-sy879-t-shirt-40d928/garment.png",
+      "mask_path": "/Users/mehul/Downloads/workspace-01a11667-77c7-7e1f-8ca7-c5ca06e2d0b3/vestiai/garments/61wgy-w0cl-sy879-t-shirt-40d928/mask.png",
+      "cutout_path": "/Users/mehul/Downloads/workspace-01a11667-77c7-7e1f-8ca7-c5ca06e2d0b3/vestiai/garments/61wgy-w0cl-sy879-t-shirt-40d928/cutout.png",
+      "preview_path": "/Users/mehul/Downloads/workspace-01a11667-77c7-7e1f-8ca7-c5ca06e2d0b3/vestiai/garments/61wgy-w0cl-sy879-t-shirt-40d928/preview.jpg",
+      "width": 768,
+      "height": 768,
+      "canvas": 768,
+      "classification": {
+        "category": "t-shirt",
+        "confidence": 1.0,
+        "method": "user_override",
+        "scores": {
+          "formal": 0.363,
+          "jacket": 0.249,
+          "sweater": 0.207,
+          "traditional": 0.147,
+          "kurta": 0.123,
+          "shirt": 0.108
+        },
+        "notes": [
+          "Category set by the user (auto-detected: formal)."
+        ]
+      },
+      "quality": {
+        "width": 586,
+        "height": 879,
+        "coverage": 0.3564,
+        "issues": [],
+        "warnings": [],
+        "bbox": [
+          107,
+          27,
+          532,
+          713
+        ],
+        "aspect_ratio": 1.614,
+        "fill_ratio": 0.0159,
+        "skin_ratio": 0.1338,
+        "hole_ratio": 0.0,
+        "ok": true,
+        "background_removal": "grabcut"
+      },
+      "source": {
+        "kind": "upload",
+        "filename": "61WGy-+w0cL._SY879_.jpg",
+        "content_type": "image/jpeg"
+      },
+      "palette": [
+        "#e7ad40",
+        "#c18870",
+        "#e8baa4",
+        "#4b2e21"
+      ],
+      "tags": [],
+      "favourite": false,
+      "garment_type": "top"
+    },
+    {
+      "key": "person-standing-front-facing-plain-white-bottom-5e8725",
+      "label": "Person Standing Front Facing Plain White 3",
+      "category": "bottom",
+      "created_at": 1791436429.491201,
+      "original_name": "person-standing-front-facing-plain-white-3.jpg",
+      "image_path": "/Users/mehul/Downloads/workspace-01a11667-77c7-7e1f-8ca7-c5ca06e2d0b3/vestiai/garments/person-standing-front-facing-plain-white-bottom-5e8725/garment.png",
+      "mask_path": "/Users/mehul/Downloads/workspace-01a11667-77c7-7e1f-8ca7-c5ca06e2d0b3/vestiai/garments/person-standing-front-facing-plain-white-bottom-5e8725/mask.png",
+      "cutout_path": "/Users/mehul/Downloads/workspace-01a11667-77c7-7e1f-8ca7-c5ca06e2d0b3/vestiai/garments/person-standing-front-facing-plain-white-bottom-5e8725/cutout.png",
+      "preview_path": "/Users/mehul/Downloads/workspace-01a11667-77c7-7e1f-8ca7-c5ca06e2d0b3/vestiai/garments/person-standing-front-facing-plain-white-bottom-5e8725/preview.jpg",
+      "width": 768,
+      "height": 768,
+      "canvas": 768,
+      "classification": {
+        "category": "bottom",
+        "confidence": 0.348,
+        "method": "heuristic",
+        "scores": {
+          "bottom": 0.213,
+          "kurta": 0.2,
+          "dress": 0.092,
+          "traditional": 0.078,
+          "accessory": 0.031,
+          "shoes": 0.0
+        },
+        "notes": [
+          "Silhouette: aspect=4.49, fill=0.56, sleeve_mass=0.19, hem_flare=0.88"
+        ]
+      },
+      "quality": {
+        "width": 408,
+        "height": 612,
+        "coverage": 0.1765,
+        "issues": [
+          "Very tall narrow shape detected \u2014 this looks like a full-body model photo, not a garment product shot."
+        ],
+        "warnings": [],
+        "bbox": [
+          144,
+          16,
+          270,
+          582
+        ],
+        "aspect_ratio": 4.492,
+        "fill_ratio": 0.0162,
+        "skin_ratio": 0.0219,
+        "hole_ratio": 0.0,
+        "ok": false,
+        "background_removal": "grabcut"
+      },
+      "source": {
+        "kind": "upload",
+        "filename": "person-standing-front-facing-plain-white-3.jpg",
+        "content_type": "image/jpeg"
+      },
+      "palette": [
+        "#34312e",
+        "#6a6662",
+        "#d9d8d7",
+        "#b3a29a"
+      ],
+      "tags": [],
+      "favourite": false,
+      "garment_type": "bottom"
+    }
+  ]
+}

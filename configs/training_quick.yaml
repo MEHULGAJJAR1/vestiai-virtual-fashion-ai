@@ -1,0 +1,42 @@
+# ======================================================================================
+# VestiAI — QUICK_DEMO training run
+#
+# Purpose: prove the whole training pipeline works end to end (data → model → loss →
+# backprop → validation grids → checkpoints → metrics) in minutes, on a laptop CPU.
+#
+#   python scripts/train.py --config configs/training_quick.yaml
+#   python scripts/train.py --config configs/training_quick.yaml --dry-run   # 2 steps
+#
+# The sample dataset is generated procedurally — it contains no copyrighted images and
+# needs no download. It is NOT meant to produce photorealistic results.
+# ======================================================================================
+mode: QUICK_DEMO
+dataset_root: datasets/samples
+output_dir: checkpoints
+resolution: 256
+batch_size: 1
+gradient_accumulation: 2
+num_epochs: 2
+max_train_samples: 64
+max_train_steps: null
+learning_rate: 0.0001
+lr_scheduler: cosine
+warmup_steps: 10
+optimizer: adamw
+mixed_precision: no          # CPU verification run — keep it in fp32
+gradient_checkpointing: true
+num_workers: 0
+num_inference_steps: 12      # validation samples only
+guidance_scale: 2.0
+enable_perceptual_loss: false
+enable_garment_clip_loss: false
+validate_every_n_epochs: 1
+save_every_n_epochs: 1
+validation_batches: 2
+validation_images: 2
+tracker: tensorboard
+log_every_n_steps: 5
+seed: 42
+device: auto
+resume: false
+category: vestiai-vton-demo

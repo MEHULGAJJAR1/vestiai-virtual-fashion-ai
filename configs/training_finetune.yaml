@@ -1,0 +1,54 @@
+# ======================================================================================
+# VestiAI — FINE_TUNE training run  (the mode to use with your own garment data)
+#
+# Fine-tunes the ControlNet branch of the VTON pipeline on VITON-HD / DressCode-compatible
+# data so it adapts to this project's garment categories and style, while the frozen
+# inpainting UNet + VAE keep the pretrained knowledge of fabric, folds and lighting.
+# Optional LoRA on the UNet lets a small GPU adapt further at ~1 % of the parameters.
+#
+#   python scripts/prepare_dataset.py --convert /path/to/viton_hd --name viton_hd
+#   python scripts/train.py --config configs/training_finetune.yaml --dataset datasets/viton_hd
+#
+# Hardware: a single 12–16 GB CUDA GPU at 512 px. On 8 GB use resolution 384 / batch 1 and
+# keep gradient_checkpointing on. Full resolution ladder: 256 → 512 → 768 (needs ~24 GB).
+# ======================================================================================
+mode: FINE_TUNE
+dataset_root: datasets/viton_hd
+output_dir: checkpoints
+resolution: 512
+batch_size: 2
+gradient_accumulation: 4          # effective batch = 8
+num_epochs: 5
+max_train_samples: null
+max_train_steps: null
+learning_rate: 0.00001
+lr_scheduler: cosine
+warmup_steps: 100
+optimizer: adamw
+weight_decay: 0.01
+max_grad_norm: 1.0
+mixed_precision: fp16             # bf16 on Ampere+ / Hopper is slightly more stable
+gradient_checkpointing: true
+num_workers: 2
+train_unet_lora: true             # adapt the UNet a little without touching its weights
+lora_rank: 16
+enable_perceptual_loss: true      # LPIPS → sharper edges (VGG16 features)
+perceptual_weight: 0.05
+enable_garment_clip_loss: true    # keeps textures close to the product photo
+garment_clip_weight: 0.1
+snr_gamma: 5.0                    # Min-SNR-γ loss weighting
+validate_every_n_epochs: 1
+save_every_n_epochs: 1
+validation_batches: 2
+validation_images: 4
+num_inference_steps: 24
+guidance_scale: 2.0
+save_top_k: 3
+early_stopping_patience: 5
+tracker: tensorboard              # tensorboard | wandb
+log_every_n_steps: 10
+seed: 42
+device: auto
+resume: true
+use_xformers: false               # enable if the xformers wheel is installed on your GPU box
+category: vestiai-vton-finetune

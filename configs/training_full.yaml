@@ -1,0 +1,53 @@
+# ======================================================================================
+# VestiAI — FULL_TRAINING run (complete dataset, cloud/GPU node)
+#
+# Intended for a rented GPU (RunPod / AWS / Colab Pro / a workstation). The developer's
+# laptop is never expected to run this. See docs/TRAINING.md for the exact commands.
+#
+#   python scripts/prepare_dataset.py --convert /data/viton_hd --name viton_hd
+#   python scripts/train.py --config configs/training_full.yaml --dataset datasets/viton_hd
+#
+# Time budget on a single A100 40 GB: ~3–6 h for one epoch over ~14 k VITON-HD pairs at
+# 512 px with batch 4 × accum 4. Resumable: kill it and rerun — `resume: true` continues
+# from checkpoints/latest_model/training_state.pt.
+# ======================================================================================
+mode: FULL_TRAINING
+dataset_root: datasets/viton_hd
+output_dir: checkpoints
+resolution: 512
+batch_size: 4
+gradient_accumulation: 4          # effective batch = 16
+num_epochs: 30
+max_train_samples: null
+max_train_steps: null
+learning_rate: 0.00001
+lr_scheduler: cosine
+warmup_steps: 500
+optimizer: adamw8bit              # bitsandbytes 8-bit Adam halves optimizer VRAM
+weight_decay: 0.01
+max_grad_norm: 1.0
+mixed_precision: bf16             # fp16 on Volta/Turing, bf16 on Ampere and newer
+gradient_checkpointing: true
+num_workers: 8
+train_unet_lora: false            # full ControlNet capacity
+enable_perceptual_loss: true
+perceptual_weight: 0.05
+enable_garment_clip_loss: true
+garment_clip_weight: 0.1
+snr_gamma: 5.0
+validate_every_n_epochs: 1
+save_every_n_epochs: 1
+validation_batches: 4
+validation_images: 8
+num_inference_steps: 30
+guidance_scale: 2.0
+save_top_k: 5
+early_stopping_patience: 8
+tracker: tensorboard              # wandb also supported (configs/training_colab.yaml)
+log_every_n_steps: 20
+seed: 42
+device: cuda
+resume: true
+use_xformers: true
+allow_tf32: true
+category: vestiai-vton-full

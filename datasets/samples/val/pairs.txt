@@ -1,0 +1,12 @@
+01000_00.jpg 01000_00.jpg kurta
+01001_00.jpg 01001_00.jpg kurta
+01002_00.jpg 01002_00.jpg kurta
+01003_00.jpg 01003_00.jpg bottom
+01004_00.jpg 01004_00.jpg t-shirt
+01005_00.jpg 01005_00.jpg shirt
+01006_00.jpg 01006_00.jpg kurta
+01007_00.jpg 01007_00.jpg top
+01008_00.jpg 01008_00.jpg shirt
+01009_00.jpg 01009_00.jpg dress
+01010_00.jpg 01010_00.jpg top
+01011_00.jpg 01011_00.jpg t-shirt

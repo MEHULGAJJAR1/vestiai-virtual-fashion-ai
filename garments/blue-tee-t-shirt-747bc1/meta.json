@@ -1,0 +1,51 @@
+{
+  "key": "blue-tee-t-shirt-747bc1",
+  "filename": "sample_tshirt.png",
+  "quality": {
+    "width": 640,
+    "height": 736,
+    "coverage": 0.2856,
+    "issues": [],
+    "warnings": [],
+    "bbox": [
+      112,
+      70,
+      529,
+      504
+    ],
+    "aspect_ratio": 1.041,
+    "fill_ratio": 0.0135,
+    "skin_ratio": 0.0744,
+    "hole_ratio": 0.0,
+    "ok": true,
+    "background_removal": "grabcut"
+  },
+  "classification": {
+    "category": "t-shirt",
+    "confidence": 0.207,
+    "method": "heuristic",
+    "scores": {
+      "t-shirt": 0.732,
+      "jacket": 0.686,
+      "sweater": 0.567,
+      "formal": 0.482,
+      "shirt": 0.413,
+      "top": 0.315
+    },
+    "notes": [
+      "Silhouette: aspect=1.04, fill=0.71, sleeve_mass=0.15, hem_flare=1.07"
+    ]
+  },
+  "palette": [
+    "#d9b459",
+    "#e0ba5d",
+    "#b29349",
+    "#f8f7f3"
+  ],
+  "created_at": 1791377848.796816,
+  "source": {
+    "kind": "upload",
+    "filename": "sample_tshirt.png",
+    "content_type": "image/png"
+  }
+}

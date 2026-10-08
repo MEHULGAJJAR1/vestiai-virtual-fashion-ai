@@ -1,0 +1,26 @@
+cat > .gitignore <<'EOF'
+.venv/
+__pycache__/
+*.pyc
+.env
+.DS_Store
+
+uploads/*
+captures/*
+logs/*
+results/*
+
+*.h5
+*.keras
+*.pt
+*.pth
+*.onnx
+*.pkl
+
+node_modules/
+frontend/node_modules/
+frontend/dist/
+
+models_cache/
+checkpoints/
+EOF

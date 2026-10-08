@@ -1,0 +1,53 @@
+{
+  "key": "person-standing-front-facing-plain-white-bottom-5e8725",
+  "filename": "person-standing-front-facing-plain-white-3.jpg",
+  "quality": {
+    "width": 408,
+    "height": 612,
+    "coverage": 0.1765,
+    "issues": [
+      "Very tall narrow shape detected \u2014 this looks like a full-body model photo, not a garment product shot."
+    ],
+    "warnings": [],
+    "bbox": [
+      144,
+      16,
+      270,
+      582
+    ],
+    "aspect_ratio": 4.492,
+    "fill_ratio": 0.0162,
+    "skin_ratio": 0.0219,
+    "hole_ratio": 0.0,
+    "ok": false,
+    "background_removal": "grabcut"
+  },
+  "classification": {
+    "category": "bottom",
+    "confidence": 0.348,
+    "method": "heuristic",
+    "scores": {
+      "bottom": 0.213,
+      "kurta": 0.2,
+      "dress": 0.092,
+      "traditional": 0.078,
+      "accessory": 0.031,
+      "shoes": 0.0
+    },
+    "notes": [
+      "Silhouette: aspect=4.49, fill=0.56, sleeve_mass=0.19, hem_flare=0.88"
+    ]
+  },
+  "palette": [
+    "#34312e",
+    "#6a6662",
+    "#d9d8d7",
+    "#b3a29a"
+  ],
+  "created_at": 1791436429.490968,
+  "source": {
+    "kind": "upload",
+    "filename": "person-standing-front-facing-plain-white-3.jpg",
+    "content_type": "image/jpeg"
+  }
+}
